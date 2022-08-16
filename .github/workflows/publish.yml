@@ -1,0 +1,57 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-dist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ^16.0.0
+      - run: npm install
+      - run: npm run build
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 📦 Update compiled files
+          file_pattern: dist/**/*
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ^16.0.0
+          registry-url: https://registry.npmjs.org/
+      - name: Check package version
+        uses: technote-space/package-version-check-action@v1
+        with:
+          COMMIT_DISABLED: 1
+      - run: npm install
+      - run: npm run build
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
+  publish-github:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ^16.0.0
+      - name: Check package version
+        uses: technote-space/package-version-check-action@v1
+        with:
+          COMMIT_DISABLED: 1
+      - run: npm install
+      - run: npm run build
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ^16.0.0
+          registry-url: 'https://npm.pkg.github.com'
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
