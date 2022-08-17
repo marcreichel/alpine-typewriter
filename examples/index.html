@@ -7,10 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Examples</title>
 
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <script defer src="../dist/alpine-typewriter.min.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body>
-<div x-data x-typewriter="['Hello', 'World']"></div>
+<body class="h-screen flex items-center justify-center text-5xl">
+    <div x-data x-typewriter="['Typewriter', 'Alpine.js', 'JavaScript']"></div>
 </body>
 </html>

@@ -25,6 +25,8 @@
   </a>
 </p>
 
+![hero](examples/hero.gif)
+
 ## 🚀 Installation
 
 ### CDN
