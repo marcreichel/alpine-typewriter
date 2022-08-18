@@ -2,3 +2,4 @@
 /.idea
 marcreichel-alpine-typewriter-*.tgz
 package-lock.json
+.DS_Store
