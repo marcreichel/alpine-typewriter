@@ -1,12 +1,19 @@
+import { Alpine } from 'alpinejs';
+
 class Typewriter {
-    constructor(element, texts, waitTime) {
+    protected element: HTMLElement;
+    protected texts: string[];
+    protected current: number;
+    protected waitTime: number;
+
+    constructor(element: HTMLElement, texts: string[], waitTime?: number) {
         this.element = element;
         this.texts = texts || [];
         this.current = 1;
         this.waitTime = waitTime || 2000;
     }
 
-    async start() {
+    public async start() {
         this.element.innerText = this.texts[0] || '';
         this.increment();
         while (true) {
@@ -14,52 +21,52 @@ class Typewriter {
         }
     }
 
-    async swap() {
+    protected async swap(): Promise<any> {
         await this.wait(this.waitTime);
         await this.clear();
         await this.type(this.nextText());
     }
 
-    increment() {
+    protected increment(): void {
         this.current++;
         if (this.current > this.texts.length) {
             this.current = 1;
         }
     }
 
-    nextText() {
+    protected nextText(): string {
         let text = this.texts[this.current - 1];
         this.increment();
         return text;
     }
 
-    text() {
+    protected text(): string {
         return this.element.innerText;
     }
 
-    length() {
+    protected length(): number {
         return this.text().length;
     }
 
-    append(text) {
+    protected append(text): Promise<any> {
         this.element.innerText += text;
 
         return this.wait(100);
     }
 
-    backspace() {
+    backspace(): Promise<any> {
         this.element.innerText = this.text().slice(0, -1);
 
         return this.wait(100);
     }
 
-    async clear() {
+    protected async clear(): Promise<any> {
         while (this.length()) {
             await this.backspace();
         }
     }
 
-    async type(text) {
+    protected async type(text): Promise<any> {
         while (text.length) {
             await this.append(text[0]);
 
@@ -67,20 +74,24 @@ class Typewriter {
         }
     }
 
-    async wait(milliseconds) {
+    protected async wait(milliseconds): Promise<any> {
         return new Promise((resolve) => {
             setTimeout(resolve, milliseconds);
         })
     }
 }
 
-export default function (Alpine) {
-    Alpine.directive('typewriter', (el, { expression, modifiers }, { evaluate }) => {
-        const texts = evaluate(expression);
+export default function (Alpine: Alpine): void {
+    Alpine.directive('typewriter', (el: Node, { expression, modifiers }, { evaluate }): void => {
+        const texts: unknown = evaluate(expression);
 
-        const timeModifiers = modifiers.filter((modifier) => modifier.match(/^\d+m?s$/));
-        const latestTimeModifier = timeModifiers.pop();
-        let milliseconds = null;
+        if (!Array.isArray(texts)) {
+            throw new Error('Please provide an array of strings.');
+        }
+
+        const timeModifiers: string[] = modifiers.filter((modifier: string) => modifier.match(/^\d+m?s$/));
+        const latestTimeModifier: string = timeModifiers.pop();
+        let milliseconds: number = null;
         if (latestTimeModifier) {
             if (latestTimeModifier.endsWith('ms')) {
                 milliseconds = parseInt(latestTimeModifier.match(/^(\d+)/)[1]);
@@ -89,6 +100,6 @@ export default function (Alpine) {
             }
         }
 
-        new Typewriter(el, texts, milliseconds).start();
+        new Typewriter(<HTMLElement> el, texts, milliseconds).start().then();
     });
 }
