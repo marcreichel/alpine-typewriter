@@ -77,29 +77,37 @@ class Typewriter {
     protected async wait(milliseconds): Promise<any> {
         return new Promise((resolve) => {
             setTimeout(resolve, milliseconds);
-        })
+        });
     }
 }
 
 export default function (Alpine: Alpine): void {
-    Alpine.directive('typewriter', (el: Node, { expression, modifiers }, { evaluate }): void => {
-        const texts: unknown = evaluate(expression);
+    Alpine.directive(
+        'typewriter',
+        (el: Node, { expression, modifiers }, { evaluate }): void => {
+            const texts: unknown = evaluate(expression);
 
-        if (!Array.isArray(texts)) {
-            throw new Error('Please provide an array of strings.');
-        }
-
-        const timeModifiers: string[] = modifiers.filter((modifier: string) => modifier.match(/^\d+m?s$/));
-        const latestTimeModifier: string = timeModifiers.pop();
-        let milliseconds: number = null;
-        if (latestTimeModifier) {
-            if (latestTimeModifier.endsWith('ms')) {
-                milliseconds = parseInt(latestTimeModifier.match(/^(\d+)/)[1]);
-            } else {
-                milliseconds = parseInt(latestTimeModifier.match(/^(\d+)s/)[1]) * 1000;
+            if (!Array.isArray(texts)) {
+                throw new Error('Please provide an array of strings.');
             }
-        }
 
-        new Typewriter(<HTMLElement> el, texts, milliseconds).start().then();
-    });
+            const timeModifiers: string[] = modifiers.filter(
+                (modifier: string) => modifier.match(/^\d+m?s$/),
+            );
+            const latestTimeModifier: string = timeModifiers.pop();
+            let milliseconds: number = null;
+            if (latestTimeModifier) {
+                if (latestTimeModifier.endsWith('ms')) {
+                    milliseconds = parseInt(
+                        latestTimeModifier.match(/^(\d+)/)[1],
+                    );
+                } else {
+                    milliseconds =
+                        parseInt(latestTimeModifier.match(/^(\d+)s/)[1]) * 1000;
+                }
+            }
+
+            new Typewriter(<HTMLElement>el, texts, milliseconds).start().then();
+        },
+    );
 }
