@@ -1,4 +1,4 @@
-name: Build
+name: Prettier
 
 on:
   - pull_request
