@@ -1,39 +1,43 @@
 {
-  "name": "@marcreichel/alpine-typewriter",
-  "version": "0.0.0",
-  "description": "A simple AlpineJS plugin to create a typewriter effect",
-  "license": "MIT",
-  "author": {
-    "name": "Marc Reichel",
-    "url": "https://marcreichel.dev/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/marcreichel/alpine-typewriter.git"
-  },
-  "main": "src/index.js",
-  "scripts": {
-    "build": "rollup -c",
-    "watch": "rollup -c -w"
-  },
-  "bugs": {
-    "url": "https://github.com/marcreichel/alpine-typewriter/issues"
-  },
-  "homepage": "https://github.com/marcreichel/alpine-typewriter#readme",
-  "devDependencies": {
-    "@babel/core": "^7.18.10",
-    "@babel/preset-env": "^7.18.10",
-    "rollup": "^2.78.0",
-    "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-filesize": "^9.1.2",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-terser": "^7.0.2"
-  },
-  "files": [
-    "LICENSE",
-    "README.md",
-    "src/index.js",
-    "package.json",
-    "dist"
-  ]
+    "name": "@marcreichel/alpine-typewriter",
+    "version": "0.0.0",
+    "description": "A simple AlpineJS plugin to create a typewriter effect",
+    "license": "MIT",
+    "author": {
+        "name": "Marc Reichel",
+        "url": "https://marcreichel.dev/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/marcreichel/alpine-typewriter.git"
+    },
+    "main": "src/index.js",
+    "scripts": {
+        "build": "rollup -c",
+        "watch": "rollup -c -w"
+    },
+    "bugs": {
+        "url": "https://github.com/marcreichel/alpine-typewriter/issues"
+    },
+    "homepage": "https://github.com/marcreichel/alpine-typewriter#readme",
+    "devDependencies": {
+        "@babel/core": "^7.18.10",
+        "@babel/preset-env": "^7.18.10",
+        "@rollup/plugin-typescript": "^9.0.2",
+        "@types/alpinejs": "^3.7.1",
+        "prettier": "^2.7.1",
+        "rollup": "^2.78.0",
+        "rollup-plugin-babel": "^4.4.0",
+        "rollup-plugin-filesize": "^9.1.2",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-terser": "^7.0.2",
+        "tslib": "^2.4.1"
+    },
+    "files": [
+        "LICENSE",
+        "README.md",
+        "src/index.js",
+        "package.json",
+        "dist"
+    ]
 }

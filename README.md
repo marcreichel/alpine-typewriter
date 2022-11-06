@@ -34,7 +34,10 @@
 Include the following `<script>` tag in the `<head>` of your document, just before Alpine.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@marcreichel/alpine-typewriter@latest/dist/alpine-typewriter.min.js" defer></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/@marcreichel/alpine-typewriter@latest/dist/alpine-typewriter.min.js"
+    defer
+></script>
 ```
 
 ### NPM
@@ -69,6 +72,7 @@ By default, a text stays for 2 seconds before being swapped out. This behavior m
 ```html
 <span x-data="{ texts: ['Hello', 'World'] }" x-typewriter.5s="texts"></span>
 ```
+
 or
 
 ```html
