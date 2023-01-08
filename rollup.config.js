@@ -1,4 +1,4 @@
-import typescript from '@rollup/plugin-typescript';
+import typescript from "@rollup/plugin-typescript";
 import babel from 'rollup-plugin-babel';
 import filesize from 'rollup-plugin-filesize';
 import resolve from 'rollup-plugin-node-resolve';
@@ -17,7 +17,7 @@ export default {
             format: 'umd',
             plugins: [terser()],
             sourcemap: true,
-        },
+        }
     ],
     plugins: [
         resolve(),
