@@ -3,11 +3,13 @@ class Typewriter {
         this.element = element;
         this.texts = texts || [];
         this.current = 1;
+        this.currentText = '';
         this.waitTime = waitTime || 2000;
     }
 
     async start() {
-        this.element.innerText = this.texts[0] || '';
+        this.currentText = this.texts[0] || '';
+        this.element.innerText = this.currentText;
         this.increment();
         while (true) {
             await this.swap();
@@ -34,7 +36,7 @@ class Typewriter {
     }
 
     text() {
-        return this.element.innerText;
+        return this.currentText;
     }
 
     length() {
@@ -42,13 +44,15 @@ class Typewriter {
     }
 
     append(text) {
-        this.element.innerText += text;
+        this.currentText += text;
+        this.element.innerText = this.currentText;
 
         return this.wait(100);
     }
 
     backspace() {
-        this.element.innerText = this.text().slice(0, -1);
+        this.currentText = this.text().slice(0, -1);
+        this.element.innerText = this.currentText;
 
         return this.wait(100);
     }
@@ -70,25 +74,33 @@ class Typewriter {
     async wait(milliseconds) {
         return new Promise((resolve) => {
             setTimeout(resolve, milliseconds);
-        })
+        });
     }
 }
 
 export default function (Alpine) {
-    Alpine.directive('typewriter', (el, { expression, modifiers }, { evaluate }) => {
-        const texts = evaluate(expression);
+    Alpine.directive(
+        'typewriter',
+        (el, { expression, modifiers }, { evaluate }) => {
+            const texts = evaluate(expression);
 
-        const timeModifiers = modifiers.filter((modifier) => modifier.match(/^\d+m?s$/));
-        const latestTimeModifier = timeModifiers.pop();
-        let milliseconds = null;
-        if (latestTimeModifier) {
-            if (latestTimeModifier.endsWith('ms')) {
-                milliseconds = parseInt(latestTimeModifier.match(/^(\d+)/)[1]);
-            } else {
-                milliseconds = parseInt(latestTimeModifier.match(/^(\d+)s/)[1]) * 1000;
+            const timeModifiers = modifiers.filter((modifier) =>
+                modifier.match(/^\d+m?s$/),
+            );
+            const latestTimeModifier = timeModifiers.pop();
+            let milliseconds = null;
+            if (latestTimeModifier) {
+                if (latestTimeModifier.endsWith('ms')) {
+                    milliseconds = parseInt(
+                        latestTimeModifier.match(/^(\d+)/)[1],
+                    );
+                } else {
+                    milliseconds =
+                        parseInt(latestTimeModifier.match(/^(\d+)s/)[1]) * 1000;
+                }
             }
-        }
 
-        new Typewriter(el, texts, milliseconds).start();
-    });
+            new Typewriter(el, texts, milliseconds).start().then();
+        },
+    );
 }

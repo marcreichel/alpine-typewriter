@@ -8,11 +8,13 @@
         this.element = element;
         this.texts = texts || [];
         this.current = 1;
+        this.currentText = '';
         this.waitTime = waitTime || 2000;
       }
 
       async start() {
-        this.element.innerText = this.texts[0] || '';
+        this.currentText = this.texts[0] || '';
+        this.element.innerText = this.currentText;
         this.increment();
 
         while (true) {
@@ -41,7 +43,7 @@
       }
 
       text() {
-        return this.element.innerText;
+        return this.currentText;
       }
 
       length() {
@@ -49,12 +51,14 @@
       }
 
       append(text) {
-        this.element.innerText += text;
+        this.currentText += text;
+        this.element.innerText = this.currentText;
         return this.wait(100);
       }
 
       backspace() {
-        this.element.innerText = this.text().slice(0, -1);
+        this.currentText = this.text().slice(0, -1);
+        this.element.innerText = this.currentText;
         return this.wait(100);
       }
 
@@ -99,7 +103,7 @@
           }
         }
 
-        new Typewriter(el, texts, milliseconds).start();
+        new Typewriter(el, texts, milliseconds).start().then();
       });
     }
 
