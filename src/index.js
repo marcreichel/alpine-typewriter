@@ -1,19 +1,27 @@
 class Typewriter {
-    constructor(element, texts, waitTime) {
+    constructor(element, texts, waitTime, showCursor) {
         this.element = element;
         this.texts = texts || [];
         this.current = 1;
         this.currentText = '';
         this.waitTime = waitTime || 2000;
+        this.showCursor = showCursor || false;
+        this.cursor = true;
     }
 
     async start() {
         this.currentText = this.texts[0] || '';
-        this.element.innerText = this.currentText;
+        this.element.innerHTML = this.currentText + this.getCursor();
         this.increment();
         while (true) {
             await this.swap();
         }
+    }
+
+    getCursor() {
+        return this.showCursor
+            ? '<span style="position:relative;"><span style="position:absolute;top:0.05em;bottom:0.05em;border-left:0.05em solid currentColor;"></span></span>'
+            : '';
     }
 
     async swap() {
@@ -45,14 +53,14 @@ class Typewriter {
 
     append(text) {
         this.currentText += text;
-        this.element.innerText = this.currentText;
+        this.element.innerHTML = this.currentText + this.getCursor();
 
         return this.wait(100);
     }
 
     backspace() {
         this.currentText = this.text().slice(0, -1);
-        this.element.innerText = this.currentText;
+        this.element.innerHTML = this.currentText + this.getCursor();
 
         return this.wait(100);
     }
@@ -72,8 +80,20 @@ class Typewriter {
     }
 
     async wait(milliseconds) {
+        this.cursor = true;
+        const interval = setInterval(() => {
+            this.cursor = !this.cursor;
+            if (this.cursor) {
+                this.element.innerHTML = this.currentText + this.getCursor();
+            } else {
+                this.element.innerHTML = this.currentText;
+            }
+        }, 530);
         return new Promise((resolve) => {
-            setTimeout(resolve, milliseconds);
+            setTimeout(() => {
+                clearInterval(interval);
+                resolve();
+            }, milliseconds);
         });
     }
 }
@@ -100,7 +120,9 @@ export default function (Alpine) {
                 }
             }
 
-            new Typewriter(el, texts, milliseconds).start().then();
+            const showCursor = modifiers.includes('cursor');
+
+            new Typewriter(el, texts, milliseconds, showCursor).start().then();
         },
     );
 }
