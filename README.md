@@ -75,7 +75,7 @@ or
 <span x-data="{ texts: ['Hello', 'World'] }" x-typewriter.3000ms="texts"></span>
 ```
 
-### Add a animated cursor
+### Add an animated cursor
 
 To add a blinking cursor add the `cursor` modifier like so:
 
