@@ -11,17 +11,27 @@ class Typewriter {
 
     async start() {
         this.currentText = this.texts[0] || '';
-        this.element.innerHTML = this.currentText + this.getCursor();
+        this.element.innerHTML = this.prepareText(true);
         this.increment();
         while (true) {
             await this.swap();
         }
     }
 
+    prepareText(cursor) {
+        return `${this.currentText}${
+            cursor ? this.getCursor() : ''
+        }${this.getPlaceholder()}`;
+    }
+
     getCursor() {
         return this.showCursor
             ? '<span style="position:relative;"><span style="position:absolute;top:0.05em;bottom:0.05em;border-left:0.05em solid currentColor;"></span></span>'
             : '';
+    }
+
+    getPlaceholder() {
+        return '<span style="position:relative;display:inline-block;height:1em;"></span>';
     }
 
     async swap() {
@@ -53,14 +63,14 @@ class Typewriter {
 
     append(text) {
         this.currentText += text;
-        this.element.innerHTML = this.currentText + this.getCursor();
+        this.element.innerHTML = this.prepareText(true);
 
         return this.wait(100);
     }
 
     backspace() {
         this.currentText = this.text().slice(0, -1);
-        this.element.innerHTML = this.currentText + this.getCursor();
+        this.element.innerHTML = this.prepareText(true);
 
         return this.wait(100);
     }
@@ -84,9 +94,9 @@ class Typewriter {
         const interval = setInterval(() => {
             this.cursor = !this.cursor;
             if (this.cursor) {
-                this.element.innerHTML = this.currentText + this.getCursor();
+                this.element.innerHTML = this.prepareText(true);
             } else {
-                this.element.innerHTML = this.currentText;
+                this.element.innerHTML = this.prepareText(false);
             }
         }, 530);
         return new Promise((resolve) => {
