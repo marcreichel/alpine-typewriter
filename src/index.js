@@ -12,9 +12,11 @@ class Typewriter {
     async start() {
         this.currentText = this.texts[0] || '';
         this.element.innerHTML = this.prepareText(true);
-        this.increment();
-        while (true) {
-            await this.swap();
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            this.increment();
+            while (true) {
+                await this.swap();
+            }
         }
     }
 

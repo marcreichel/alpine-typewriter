@@ -19,8 +19,10 @@
         this.element.innerHTML = this.prepareText(true);
         this.increment();
 
-        while (true) {
-          await this.swap();
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          while (true) {
+            await this.swap();
+          }
         }
       }
 
