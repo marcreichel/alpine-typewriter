@@ -7,10 +7,14 @@ class Typewriter {
         this.waitTime = waitTime || 2000;
         this.showCursor = showCursor || false;
         this.cursor = true;
+        this.segment = [];
+        this.segmentPointer = 0;
     }
 
     async start() {
         this.currentText = this.texts[0] || '';
+        this.segment = this.segmentString(this.currentText);
+        this.segmentPointer = this.segment.length;
         this.element.innerHTML = this.prepareText(true);
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             this.increment();
@@ -50,45 +54,53 @@ class Typewriter {
     }
 
     nextText() {
-        let text = this.texts[this.current - 1];
+        const text = this.texts[this.current - 1];
         this.increment();
         return text;
     }
 
-    text() {
-        return this.currentText;
-    }
-
-    length() {
-        return this.text().length;
-    }
-
-    append(text) {
-        this.currentText += text;
-        this.element.innerHTML = this.prepareText(true);
-
-        return this.wait(100);
+    segmentString(value) {
+        const segments =
+            typeof Intl != 'undefined' && Intl.Segmenter
+                ? [...new Intl.Segmenter().segment(value)]
+                : value.split('').map((segment, index) => ({ segment, index }));
+        const values = [''];
+        let current = '';
+        segments.forEach(({ segment }) => {
+            current += segment;
+            values.push(current);
+        });
+        return values;
     }
 
     backspace() {
-        this.currentText = this.text().slice(0, -1);
+        this.currentText = this.segment[this.segmentPointer];
         this.element.innerHTML = this.prepareText(true);
 
         return this.wait(100);
     }
 
     async clear() {
-        while (this.length()) {
+        while (this.segmentPointer > 0) {
+            this.segmentPointer--;
             await this.backspace();
         }
     }
 
     async type(text) {
-        while (text.length) {
-            await this.append(text[0]);
-
-            text = text.substring(1);
+        this.segment = this.segmentString(text);
+        this.segmentPointer = 0;
+        while (this.segmentPointer < this.segment.length) {
+            await this.append();
+            this.segmentPointer++;
         }
+    }
+
+    append() {
+        this.currentText = this.segment[this.segmentPointer];
+        this.element.innerHTML = this.prepareText(true);
+
+        return this.wait(100);
     }
 
     async wait(milliseconds) {
@@ -114,27 +126,27 @@ export default function (Alpine) {
     Alpine.directive(
         'typewriter',
         (el, { expression, modifiers }, { evaluate }) => {
-            const texts = evaluate(expression);
+        const texts = evaluate(expression);
 
             const timeModifiers = modifiers.filter((modifier) =>
                 modifier.match(/^\d+m?s$/),
             );
-            const latestTimeModifier = timeModifiers.pop();
-            let milliseconds = null;
-            if (latestTimeModifier) {
+        const latestTimeModifier = timeModifiers.pop();
+        let milliseconds = null;
+        if (latestTimeModifier) {
                 if (latestTimeModifier.endsWith('ms')) {
                     milliseconds = parseInt(
                         latestTimeModifier.match(/^(\d+)/)[1],
                     );
-                } else {
+            } else {
                     milliseconds =
                         parseInt(latestTimeModifier.match(/^(\d+)s/)[1]) * 1000;
-                }
             }
+        }
 
             const showCursor = modifiers.includes('cursor');
 
-            new Typewriter(el, texts, milliseconds, showCursor).start().then();
+        new Typewriter(el, texts, milliseconds, showCursor).start().then();
         },
     );
 }
