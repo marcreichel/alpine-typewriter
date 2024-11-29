@@ -63,14 +63,8 @@ class Typewriter {
         const segments =
             typeof Intl != 'undefined' && Intl.Segmenter
                 ? [...new Intl.Segmenter().segment(value)]
-                : value.split('').map((segment, index) => ({ segment, index }));
-        const values = [''];
-        let current = '';
-        segments.forEach(({ segment }) => {
-            current += segment;
-            values.push(current);
-        });
-        return values;
+                : value.split('').map((segment) => ({ segment }));
+        return segments.reduce((acc, { segment }, index) => [...acc, acc[index] + segment], ['']);
     }
 
     backspace() {
