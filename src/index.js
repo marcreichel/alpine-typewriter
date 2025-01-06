@@ -120,27 +120,27 @@ export default function (Alpine) {
     Alpine.directive(
         'typewriter',
         (el, { expression, modifiers }, { evaluate }) => {
-        const texts = evaluate(expression);
+            const texts = evaluate(expression);
 
             const timeModifiers = modifiers.filter((modifier) =>
                 modifier.match(/^\d+m?s$/),
             );
-        const latestTimeModifier = timeModifiers.pop();
-        let milliseconds = null;
-        if (latestTimeModifier) {
+            const latestTimeModifier = timeModifiers.pop();
+            let milliseconds = null;
+            if (latestTimeModifier) {
                 if (latestTimeModifier.endsWith('ms')) {
                     milliseconds = parseInt(
                         latestTimeModifier.match(/^(\d+)/)[1],
                     );
-            } else {
+                } else {
                     milliseconds =
                         parseInt(latestTimeModifier.match(/^(\d+)s/)[1]) * 1000;
+                }
             }
-        }
 
             const showCursor = modifiers.includes('cursor');
 
-        new Typewriter(el, texts, milliseconds, showCursor).start().then();
+            new Typewriter(el, texts, milliseconds, showCursor).start().then();
         },
     );
 }
