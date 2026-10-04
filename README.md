@@ -1,4 +1,4 @@
-<h1 align="center">⌨️ Alpine Typewriter ⌨️</h1>
+<img src=".github/header.gif" alt="Alpine Typewriter"/>
 
 <p align="center">
   An <a href="https://alpinejs.dev">Alpine.js</a> plugin to add a typewriter effect to any HTML element.
@@ -24,8 +24,6 @@
     <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg" alt="Gitmoji">
   </a>
 </p>
-
-![hero](examples/hero.gif)
 
 ## 🚀 Installation
 
